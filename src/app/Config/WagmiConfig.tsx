@@ -6,8 +6,9 @@ import { injected } from "wagmi/connectors";
 
 export const wagmiConfig = createConfig({
   chains: [ sepolia],
+  ssr:true,
   connectors: [injected()],
   transports: {
-    [sepolia.id]: http("https://eth-sepolia.g.alchemy.com/v2/tIeUh0TvrHWEHDIlwb0_oE6B4BuJ8R4X"),
+    [sepolia.id]: http(process.env.SEPOLIA_ALCHEMY_API_KEY),
   },
 });
