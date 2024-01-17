@@ -1,10 +1,10 @@
 "use client";
 
-import { createConfig, http } from "wagmi";
+import { Config, createConfig, http } from "wagmi";
 import { sepolia } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
-export const wagmiConfig = createConfig({
+export const wagmiConfig: Config = createConfig({
   chains: [ sepolia],
   ssr:true,
   connectors: [injected()],
