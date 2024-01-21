@@ -9,11 +9,12 @@
 "[javascriptreact][javascript][typescriptreact][typescript][json]": {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
+    "source.organizeImports": true
   }
 },
 "prettier.prettierPath": "node_modules/prettier",
   "cSpell.words": [
+    "Initialiser",
     "sepolia",
     "wagmi"
   ]

@@ -1,0 +1,3 @@
+import { Abi } from "viem";
+
+export const orchestratorAbi:Abi= [{"inputs":[],"name":"gameAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getGameAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_address","type":"address"}],"name":"setGameAddress","outputs":[],"stateMutability":"nonpayable","type":"function"}]

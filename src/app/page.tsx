@@ -1,6 +1,9 @@
-import { Header } from "./Components/Header/Header";
+import { Dashboard } from "@/Components/Dashboard";
+
 
 export default function Home() {
-  return <Header/>
+  return <div className="h-screen">
+    <Dashboard/>
+  </div>
 
 }
