@@ -18,11 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-purple-200">
         <Provider>
-          <Header/>
-          <div className="h-screen w-screen">
-          {children}
-          </div>
-          <Footer/>
+          <Header />
+          <div className="h-screen w-screen">{children}</div>
+          <Footer />
         </Provider>
       </body>
     </html>

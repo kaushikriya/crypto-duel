@@ -12,9 +12,9 @@
     "source.organizeImports": true
   }
 },
-"prettier.prettierPath": "node_modules/prettier",
   "cSpell.words": [
     "Initialiser",
+    "keccak",
     "sepolia",
     "wagmi"
   ]

@@ -1,14 +1,18 @@
 import React, { ReactNode, createContext } from "react";
-import { PublicClient } from "viem";
+import { PublicClient, WalletClient } from "viem";
 import { Config, useConfig, usePublicClient, useWalletClient } from "wagmi";
 import { OrchestratorClient } from "../Lib/Orchestrator";
 
 export interface ClientContext {
   orchestratorClient?: OrchestratorClient;
+  publicClient?: PublicClient
+  walletClient?: WalletClient
 }
 
 export const Context = createContext<ClientContext>({
-  orchestratorClient: undefined
+  orchestratorClient: undefined,
+  publicClient: undefined,
+  walletClient: undefined
 });
 
 export interface ClientProviderProps {
@@ -24,7 +28,7 @@ const ClientProvider: React.FC<ClientProviderProps> = ({children}) => {
   orchestratorClient.init(publicClient, walletClient)
 
   return (
-    <Context.Provider value={{orchestratorClient}}>
+    <Context.Provider value={{publicClient, walletClient, orchestratorClient}}>
       {children}
     </Context.Provider>
   );
