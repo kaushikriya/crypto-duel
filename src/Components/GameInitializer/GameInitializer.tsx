@@ -2,8 +2,11 @@
 
 import { gameContractAbi, gameContractBytecode } from "@/Constants/ABIs/RPS";
 import { Context } from "@/Contexts/ClientContext";
+import { PLAYER } from "@/Utils/player";
 import { useDeployContract } from "@/hooks";
+import { useSettleGame } from "@/hooks/useSettleGame/useSettleGame";
 import classNames from "classnames";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { encodePacked, keccak256, stringToHex } from "viem";
 import { useAccount } from "wagmi";
@@ -20,7 +23,11 @@ enum FormInput {
   stake,
 }
 
-export default function GameInitialiser() {
+export default function GameInitialiser({
+  player = PLAYER.FIRST_PLAYER,
+}: {
+  player?: PLAYER;
+}) {
   const { address } = useAccount();
   const { deployContract } = useDeployContract(address ?? stringToHex(""));
   const [formInput, setFormInput] = useState<FormInputType>({
@@ -28,11 +35,15 @@ export default function GameInitialiser() {
     address: "0x801a96DDDb619a30d8f1a97E86De1e56ea4a80ce",
   });
 
+  const router = useRouter();
+
   const handleFormInput = (key: FormInput, value: string | number) => {
     setFormInput({ ...formInput, [FormInput[key]]: value });
   };
 
   const { orchestratorClient } = useContext(Context);
+
+  const { handleSecondPlayerMove } = useSettleGame();
 
   const handleStartGame = async () => {
     const abi = gameContractAbi;
@@ -48,11 +59,18 @@ export default function GameInitialiser() {
       BigInt(formInput?.stake ?? 10)
     );
 
-    console.log(contractAddress);
-
     if (address && contractAddress) {
       orchestratorClient?.setGameAddress(address, contractAddress);
     }
+  };
+
+  const handleGame = () => {
+    if (player === PLAYER.FIRST_PLAYER) {
+      handleStartGame();
+    } else {
+      handleSecondPlayerMove(formInput.move);
+    }
+    router.push("/gameBoard");
   };
 
   const options: Array<Record<string, number>> = [
@@ -66,26 +84,28 @@ export default function GameInitialiser() {
   return (
     <div className="flex justify-center items-center w-full h-full">
       <div className="grid w-1/2 items-center">
-        <div className="flex justify-center items-center">
-          <input
-            id="address"
-            name="address"
-            placeholder="address"
-            className="rounded-lg p-2 w-2/3"
-            value={formInput.address}
-            onChange={(event) => {
-              handleFormInput(FormInput.stake, event?.target.value);
-            }}
-          />
-          <input
-            className="rounded-lg p-2 w-2/3"
-            placeholder="stake"
-            value={formInput.stake?.toString()}
-            onChange={(event) => {
-              handleFormInput(FormInput.stake, event.target.value);
-            }}
-          />
-        </div>
+        {player === PLAYER.FIRST_PLAYER && (
+          <div className="flex justify-center items-center gap-2">
+            <input
+              id="address"
+              name="address"
+              placeholder="address"
+              className="rounded-lg p-2 w-2/3"
+              value={formInput.address}
+              onChange={(event) => {
+                handleFormInput(FormInput.stake, event?.target.value);
+              }}
+            />
+            <input
+              className="rounded-lg p-2 w-2/3"
+              placeholder="stake"
+              value={formInput.stake?.toString()}
+              onChange={(event) => {
+                handleFormInput(FormInput.stake, event.target.value);
+              }}
+            />
+          </div>
+        )}
         <div className="w-full p-5 flex justify-between items-center">
           {options.map((op, index) => {
             const [key, value] = Object.entries(op)[0];
@@ -104,9 +124,9 @@ export default function GameInitialiser() {
           })}
           <button
             className="rounded-lg p-3 w-1/2 m-2 bg-purple-600"
-            onClick={handleStartGame}
+            onClick={handleGame}
           >
-            Start Game
+            {player === PLAYER.FIRST_PLAYER ? "Start Game" : "Play"}
           </button>
         </div>
       </div>

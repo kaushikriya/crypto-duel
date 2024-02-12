@@ -1,19 +1,18 @@
 "use client";
 
+import { ZERO_ADDRESS } from "@/Constants/ContractAddress/address";
 import { Context } from "@/Contexts/ClientContext";
 import { QUERY_KEYS } from "@/Utils/queryKeys";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { Address } from "viem";
 import { GameBoard } from "..";
+import { Button } from "../Button";
 
 export const Dashboard = () => {
-  const { orchestratorClient, gameClient, initializeGameClient } =
-    useContext(Context);
-
   const router = useRouter();
+  const { orchestratorClient } = useContext(Context);
 
   const {
     data: currentGameAddress,
@@ -35,20 +34,17 @@ export const Dashboard = () => {
     return <div>Error fetching game address</div>;
   }
 
-  const handleViewGame = () => {
-    if (!gameClient && currentGameAddress && initializeGameClient) {
-      initializeGameClient(currentGameAddress);
-    }
-    router.push("./gameBoard");
+  const handleStartGame = () => {
+    router.push("/startGame");
   };
 
   return (
     <div>
-      {currentGameAddress ? (
+      {currentGameAddress && currentGameAddress !== ZERO_ADDRESS ? (
         <GameBoard gameAddress={currentGameAddress} />
       ) : (
         <div className="w-full flex items-center justify-center h-screen">
-          <Link href="/initialise">Start Game</Link>
+          <Button onClick={handleStartGame}>Start Game</Button>
         </div>
       )}
     </div>

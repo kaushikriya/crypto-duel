@@ -7,6 +7,7 @@ import { useSettleGame } from "@/hooks/useSettleGame/useSettleGame";
 import { useContext, useEffect } from "react";
 import { Address } from "viem";
 import { Counter } from "../Counter/Counter";
+import GameInitialiser from "../GameInitializer/GameInitializer";
 
 export const GameBoard = ({ gameAddress }: { gameAddress: Address }) => {
   const { initializeGameClient, gameClient } = useContext(Context);
@@ -52,6 +53,9 @@ export const GameBoard = ({ gameAddress }: { gameAddress: Address }) => {
       );
     }
   } else if (player === PLAYER.SECOND_PLAYER) {
+    if (!data.lastActionData?.secondPlayerMove) {
+      return <GameInitialiser player={player} />;
+    }
     return (
       <div>
         <Counter
